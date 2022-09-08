@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>GAS RESTful API</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+      body {
+        background-color: rgb(50, 50, 50);
+        color: white
+      }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  </head>
+  <body>
+    <div class="">
+      <h1>Get some data from Google Apps Script</h1>
+      <p>onLoad: <span id="onLoad"></span></p>
+      <p>Data from AppsScript: <pre id="data"></pre></p>
+    </div>
+    
+    <script>
+      $(window).on("load", () => {
+        $("#onLoad").text("Hello world!");
+       // Google Apps Script URL
+        let url = "https://script.google.com/a/macros/noaa.gov/s/AKfycbx7IuBdyaO7Ff3HDS8C5wS10qDP2FIVEyiXWVZgtFOh1T1qFOURxbDUnu0bcG84xnqT/exec";
+        
+        let r = jQuery.ajax({
+          crossDomain: true,
+          url: url,
+          method: "GET",
+          dataType: "json"
+        });
+        
+        r.done((data) => {
+          console.log(data);
+          $("#data").text(JSON.stringify(data, null, 2));
+          // Ideally the result would be:
+          // {"code":200,"message":"Hello from Google Apps Script!"}
+        });
+        
+        r.fail((data) => {
+          console.log(data);
+          $("#data").text(JSON.stringify(data, null, 2));
+          // But instead we get an error due to CORS being disabled on Google's side
+        });
+      });
+    </script>
+  </body>
+</html>
